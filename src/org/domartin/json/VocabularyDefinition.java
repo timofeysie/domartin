@@ -1,39 +1,38 @@
 package com.curchod.json;
 
-import org.apache.http.message.BasicNameValuePair;
-
+import org.domartin.util.OrderedPair;
 /**
  * Create a definition JSON node based on the following structure:
  * "definition":
-            "name": "ko-KR": "고양이"
-            "description":  Reading ,Writing, Speaking or Listening
-            "type": "http://ko.wiktionary.org/wiki/고양이"           
+*            "name": "ko-KR": "고양이"
+*            "description":  Reading ,Writing, Speaking or Listening
+ *           "type": "http://ko.wiktionary.org/wiki/고양이"           
  * @author user
  *
  */
 public class VocabularyDefinition 
 {
 	
-	private BasicNameValuePair name;
+	private OrderedPair name;
 	private String description;
 	private String type;
 	 
 	public void setName(String locale, String word)
 	{
-		this.name = new BasicNameValuePair(locale, word);
+		this.name = new OrderedPair(locale, word);
 	}
 	
-	public BasicNameValuePair getName()
+	public OrderedPair getName()
 	{
 		return this.name;
 	}
 	
-	public String getNameLocale()
+	public Object getNameLocale()
 	{
-		return this.name.getName();
+		return this.name.getKey();
 	}
 	
-	public String getNameValue()
+	public Object getNameValue()
 	{
 		return this.name.getValue();
 	}

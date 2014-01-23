@@ -15,6 +15,7 @@
 	<property name="junit.fork" value="true" />
 
 	<path id="compile.classpath">
+    		<pathelement path ="lib/httpcore-4.3.1"/>
 	</path>
 
 	<path id="test.classpath">

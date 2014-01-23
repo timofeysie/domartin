@@ -6,12 +6,12 @@ import java.net.URI;
  * Create a JSON object based on the TinCan API with the following structure:
  * 
  * "object":
-        "id": "http://en.wiktionary.org/wiki/cat",
-        "objectType": "Activity",
-        "definition":
-            "name": "ko-KR": "고양이"
-            "description": “Reading”
-            "type": "http://ko.wiktionary.org/wiki/고양이"
+ *       "id": "http://en.wiktionary.org/wiki/cat",
+ *       "objectType": "Activity",
+ *       "definition":
+ *           "name": "ko-KR": "고양이"
+ *           "description": “Reading”
+ *           "type": "http://ko.wiktionary.org/wiki/고양이"
  * @author user
  *
  */
