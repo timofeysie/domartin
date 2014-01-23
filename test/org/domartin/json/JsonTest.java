@@ -1,11 +1,11 @@
-package com.curchod.json;
+package org.domartin.json;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import junit.framework.TestCase;
 
-import com.curchod.json.*;
+import org.domartin.json.*;
 
 public class JsonTest extends TestCase 
 {

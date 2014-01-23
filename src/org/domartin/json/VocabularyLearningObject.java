@@ -1,4 +1,4 @@
-package com.curchod.json;
+package org.domartin.json;
 
 import java.net.URI;
 
