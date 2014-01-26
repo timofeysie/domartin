@@ -19,7 +19,9 @@
 	<property name="junit.fork" value="true" />
 
 	<path id="compile.classpath">
-    		<pathelement path ="lib/httpcore-4.3.1"/>
+    		<pathelement path ="lib/httpcore-4.3.1.jar"/>
+		<pathelement path ="lib/tincan-1.jar"/>
+		<pathelement path ="lib/tincan-1-jar-with-dependencies.jar"/>
 	</path>
 
 	<path id="test.classpath">
