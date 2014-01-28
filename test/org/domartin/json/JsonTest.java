@@ -6,6 +6,7 @@ import junit.framework.TestCase;
 import org.domartin.json.*;
 
 //import com.rusticisoftware.tincan.TestUtils.assertSerializeDeserialize;
+
 //import com.rusticisoftware.tincan.TestUtils.getAgent;
 import com.rusticisoftware.tincan.*;
 import com.fasterxml.jackson.databind.*;
@@ -114,4 +115,48 @@ public class JsonTest extends TestCase
         System.err.println(uuid);      
         assertEquals(expected, actual);
     }
+    
+    public void statementTest() throws Exception 
+    {    
+        List<StatementTarget> statementTargets = new ArrayList<StatementTarget>();
+        statementTargets.add(new Activity("http://example.com/activity"));
+        statementTargets.add(getAgent("Target", "mbox", "mailto:target@example.com"));
+        statementTargets.add(new StatementRef(UUID.randomUUID()));
+        
+        SubStatement sub = new SubStatement();
+        sub.setActor(getAgent("Sub", "mbox", "mailto:sub@example.com"));
+        sub.setVerb(new Verb("http://example.com/verb"));
+        sub.setObject(new Activity("http://example.com/sub-activity"));
+        statementTargets.add(sub);
+        
+        
+        Statement st = new Statement();
+        st.setActor(getAgent("Joe", "mbox", "mailto:joe@example.com"));
+
+        st.setAttachments(new ArrayList<Attachment>());
+        Attachment att = new Attachment();
+        att.setSha2("abc");
+        st.getAttachments().add(att);
+        
+        st.setAuthority(getAgent("Authority", "mbox", "mailto:authority@example.com"));
+        
+        st.setContext(new Context());
+        st.getContext().setLanguage("en-US");
+        
+        st.setId(UUID.randomUUID());
+        
+        st.setResult(new Result());
+        st.getResult().setCompletion(true);
+        
+        st.setStored(new DateTime());
+        st.setTimestamp(new DateTime());
+        st.setVerb(new Verb("http://example.com/verb"));
+        
+        System.err.println("--- statementTest() ---");
+        System.err.println(st.toString());
+        System.err.println("-----------------------");
+        
+        assertEquals(true, false);
+    }
+    
 }
