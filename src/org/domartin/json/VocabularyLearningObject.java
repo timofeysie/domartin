@@ -9,9 +9,9 @@ import java.net.URI;
  *       "id": "http://en.wiktionary.org/wiki/cat",
  *       "objectType": "Activity",
  *       "definition":
- *           "name": "ko-KR": "°í¾çÀÌ"
- *           "description": ¡°Reading¡±
- *           "type": "http://ko.wiktionary.org/wiki/°í¾çÀÌ"
+ *           "name": "ko-KR": "Â°Ã­Å¸Ã§Ã€ÃŒ"
+ *           "description": Â¡Â°ReadingÂ¡Â±
+ *           "type": "http://ko.wiktionary.org/wiki/Â°Ã­Å¸Ã§Ã€ÃŒ"
  * @author user
  *
  */

@@ -23,9 +23,9 @@ public class JsonTest extends TestCase
 	    vlo.setId(id);
 	    vlo.setObjectType("Activity");
 	    VocabularyDefinition definition = new VocabularyDefinition();
-	    definition.setName("ko-KR", "°í¾çÀÌ");
+	    definition.setName("ko-KR", "Â°Ã­Å¸Ã§Ã€ÃŒ");
 	    definition.setDescription("Reading");
-	    definition.setType("http://ko.wiktionary.org/wiki/°í¾çÀÌ");
+	    definition.setType("http://ko.wiktionary.org/wiki/Â°Ã­Å¸Ã§Ã€ÃŒ");
 	    vlo.setDefintion(definition);
 	    String actual = vlo.toJSON();
 	    System.err.println(actual);
@@ -35,9 +35,9 @@ public class JsonTest extends TestCase
         buffer.append("\"id\": \"http://en.wiktionary.org/wiki/cat\",");
         buffer.append("\"objectType\": \"Activity\",");
         buffer.append("\"definition\": {");
-        buffer.append("\"name\": {\"ko-KR\": \"°í¾çÀÌ\"},");
+        buffer.append("\"name\": {\"ko-KR\": \"Â°Ã­Å¸Ã§Ã€ÃŒ\"},");
         buffer.append("\"description\": \"Reading\",");
-        buffer.append("\"type\": \"http://ko.wiktionary.org/wiki/°í¾çÀÌ\"");
+        buffer.append("\"type\": \"http://ko.wiktionary.org/wiki/Â°Ã­Å¸Ã§Ã€ÃŒ\"");
         buffer.append("}}");
         String expected = buffer.toString();
         System.err.println(actual);
