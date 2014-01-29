@@ -22,7 +22,9 @@
     		<pathelement path ="lib/httpcore-4.3.1.jar"/>
 		<pathelement path ="lib/tincan-1.jar"/>
 		<pathelement path ="lib/tincan-1-jar-with-dependencies.jar"/>
-		<pathelement path ="jackson-databind-2.0.5.jar"/>
+		<pathelement path ="jackson-databind-2.2.3.jar"/>
+		<pathelement path ="jackson-core-2.2.3.jar"/>
+		<pathelement path ="jackson-annotations-2.2.3.jar"/>
 	</path>
 
 	<path id="test.classpath">
