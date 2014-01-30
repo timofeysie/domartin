@@ -4,9 +4,9 @@ import org.domartin.util.OrderedPair;
 /**
  * Create a definition JSON node based on the following structure:
  * "definition":
-*            "name": "ko-KR": "°íŸçÀÌ"
+*            "name": "ko-KR": "goyangi"
 *            "description":  Reading ,Writing, Speaking or Listening
- *           "type": "http://ko.wiktionary.org/wiki/°íŸçÀÌ"           
+ *           "type": "http://ko.wiktionary.org/wiki/goyangi"           
  * @author user
  *
  */

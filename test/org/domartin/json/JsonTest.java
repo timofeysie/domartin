@@ -57,9 +57,9 @@ public class JsonTest extends TestCase
 	    vlo.setId(id);
 	    vlo.setObjectType("Activity");
 	    VocabularyDefinition definition = new VocabularyDefinition();
-	    definition.setName("ko-KR", "째챠타챌�횑");
+	    definition.setName("ko-KR", "goyangi");
 	    definition.setDescription("Reading");
-	    definition.setType("http://ko.wiktionary.org/wiki/째챠타챌�횑");
+	    definition.setType("http://ko.wiktionary.org/wiki/goyangi");
 	    vlo.setDefintion(definition);
 	    String actual = vlo.toJSON();
 	    System.err.println(actual);
@@ -69,9 +69,9 @@ public class JsonTest extends TestCase
         buffer.append("\"id\": \"http://en.wiktionary.org/wiki/cat\",");
         buffer.append("\"objectType\": \"Activity\",");
         buffer.append("\"definition\": {");
-        buffer.append("\"name\": {\"ko-KR\": \"째챠타챌�횑\"},");
+        buffer.append("\"name\": {\"ko-KR\": \"goyangi\"},");
         buffer.append("\"description\": \"Reading\",");
-        buffer.append("\"type\": \"http://ko.wiktionary.org/wiki/째챠타챌�횑\"");
+        buffer.append("\"type\": \"http://ko.wiktionary.org/wiki/goyangi\"");
         buffer.append("}}");
         String expected = new String(buffer);
         //System.err.println(actual);
@@ -203,14 +203,16 @@ public class JsonTest extends TestCase
     {
         //read json file data to String
         File file = new File("/");
+        String to_file = "projects"+File.separator+"domartin"+File.separator+"files"+File.separator;
         String path = file.getAbsolutePath();
-        System.out.println("path "+path);
-        byte[] jsonData = Files.readAllBytes(Paths.get("employee.txt"));
+        //System.out.println("path "+path+to_file);
+        byte[] jsonData = Files.readAllBytes(Paths.get(path+to_file+"employee.txt"));
+        String expected = new String(jsonData);
         //create ObjectMapper instance
         ObjectMapper objectMapper = new ObjectMapper();
         //convert json string to object
         Employee emp = objectMapper.readValue(jsonData, Employee.class);
-        System.out.println("Employee Object\n"+emp);
+        //System.out.println("Employee Object\n"+emp);
         //convert Object to json string
         Employee emp1 = createEmployee();
         //configure Object mapper for pretty print
@@ -218,10 +220,64 @@ public class JsonTest extends TestCase
         //writing to console, can write to any output stream such as file
         StringWriter stringEmp = new StringWriter();
         objectMapper.writeValue(stringEmp, emp1);
-        System.out.println("Employee JSON is\n"+stringEmp);
-        assertEquals(true, false);
+        //System.out.println("Employee JSON is\n"+stringEmp);
+        String actual = stringEmp.toString();
+        actual = actual.replace("\n", "").replace("\r", "");
+        expected = expected.replace("\n", "").replace("\r", "");
+        assertEquals(expected,actual);
     }
  
+    public void testJsonMap() throws Exception
+    {
+        File file = new File("/");
+        String to_file = "projects"+File.separator+"domartin"+File.separator+"files"+File.separator;
+        String path = file.getAbsolutePath();
+        System.out.println("path "+path+to_file);
+        //converting json to Map
+        byte[] mapData = null;
+        Map<String,String> map1 = null;
+        Map<String,String> map2 = null;
+        ObjectMapper objectMapper = new ObjectMapper();
+        try 
+        {
+            mapData = Files.readAllBytes(Paths.get(path+to_file+"cat_reading_test.json"));
+            map1 = new HashMap<String, String>();
+            map1 = objectMapper.readValue(mapData, HashMap.class);
+        } catch (java.io.IOException e) 
+        {
+            System.out.println("IOException ");
+            e.printStackTrace();
+        }
+        System.out.println("Map1 is: "+map1);
+        assertEquals(true, false);
+    }
+
+    public void testTypeReferenceMap() throws Exception
+    {
+        File file = new File("/");
+        String to_file = "projects"+File.separator+"domartin"+File.separator+"files"+File.separator;
+        String path = file.getAbsolutePath();
+        System.out.println("path "+path+to_file);
+        //converting json to Map
+        byte[] mapData = null;
+        Map<String,String> map1 = null;
+        Map<String,String> map2 = null;
+        ObjectMapper objectMapper = new ObjectMapper();
+        try 
+        {
+            mapData = Files.readAllBytes(Paths.get(path+to_file+"cat_reading_test.json"));
+            //another way
+            map2 = objectMapper.readValue(mapData, new TypeReference<HashMap<String,String>>() {});
+        } catch (java.io.IOException e) 
+        {
+            System.out.println("IOException ");
+            e.printStackTrace();
+        }
+        System.out.println("Map1 is: "+map1);
+ 
+        System.out.println("Map2 using TypeReference: "+map2);
+        assertEquals(true, false);
+    }
 
     public static Employee createEmployee() 
     {
