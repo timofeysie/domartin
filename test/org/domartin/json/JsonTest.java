@@ -37,9 +37,15 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.domartin.json.Address;
 import org.domartin.json.Employee;
 
+import org.domartin.util.JacksonUtility;
+
 public class JsonTest extends TestCase 
 {
 
+    /**
+    * This test was our first attempt at simply using a toJason method
+    * with a bean class to create our vocabulary objects.
+    */
 	public void testVocabularyLearningObject() 
 	{
 		VocabularyLearningObject vlo = new VocabularyLearningObject();
@@ -60,7 +66,7 @@ public class JsonTest extends TestCase
 	    definition.setType("http://ko.wiktionary.org/wiki/goyangi");
 	    vlo.setDefintion(definition);
 	    String actual = vlo.toJSON();
-	    System.err.println(actual);
+	    //System.err.println(actual);
 	    
 	    StringBuffer buffer = new StringBuffer();
 		buffer.append("\"object\": {");
@@ -129,10 +135,10 @@ public class JsonTest extends TestCase
         String expected = "Statement(id="+uuid
         	+", authority=Agent(objectType=Agent, name=TestName, mbox=timofeyc@test.com, mboxSHA1Sum=null, openID=null, account=null), version=null, voided=null)";
 		String actual = st.toString();
-        System.err.println("---");
-        System.err.println(st.toString());
-        System.err.println("---");
-        System.err.println(uuid);      
+        //System.out.println("---");
+        //System.out.println(st.toString());
+        //System.out.println("---");
+        //System.out.println(uuid);      
         assertEquals(expected, actual);
     }
     
@@ -299,11 +305,11 @@ public class JsonTest extends TestCase
         // found: String   
         String expected = "android";
         String actual = "";  
-        java.util.Iterator <HashMap> it = map1.entrySet().iterator();
+        java.util.Iterator it = map1.entrySet().iterator();
         while (it.hasNext()) 
         {
-            Map.Entry <String,HashMap> pairs = it.next();
-            String key = pairs.getKey();
+            Map.Entry pairs = (Map.Entry)it.next();
+            String key = (String)pairs.getKey();
             HashMap value_hash = (HashMap)pairs.getValue();
             if (key.equals("context"))
             {
@@ -361,6 +367,37 @@ public class JsonTest extends TestCase
         }
         int actual = idNode.asInt();
         int expected = 123;
+        assertEquals(expected,actual);
+    }
+
+    /**
+    * A test of editing a json document.
+    */
+    public void testJsonEdit() throws Exception
+    {
+        //read json file data to String
+        File file = new File("/");
+        String to_file = "projects"+File.separator+"domartin"+File.separator+"files"+File.separator;
+        String path = file.getAbsolutePath();
+        byte[] json_data = Files.readAllBytes(Paths.get(path+to_file+"employee.txt"));
+        ObjectMapper objectMapper = new ObjectMapper();
+        //create JsonNode
+        JsonNode rootNode = objectMapper.readTree(json_data);
+        double expected = (Math.random())*500;
+        System.out.println("New id "+expected);
+        //update JSON data
+        ((ObjectNode) rootNode).put("id", Double.toString(expected));
+        //add new key value
+        //((ObjectNode) rootNode).put("test", "test value");
+        //remove existing key
+        //((ObjectNode) rootNode).remove("role");
+        //((ObjectNode) rootNode).remove("properties");
+        String new_file_path = JacksonUtility.getPathToFolder(path+"projects", "domartin", "files", "updated_emp.txt");
+        objectMapper.writeValue(new File(new_file_path), rootNode);
+        // now load the modified file and check the change.
+        String path_to_file = JacksonUtility.getPathToFolder("projects", "domartin", "files");
+        json_data = JacksonUtility.getJsonData("updated_emp.txt", path_to_file, file.getAbsolutePath());
+        String actual = JacksonUtility.findNodeValue(json_data, "id");
         assertEquals(expected,actual);
     }
 
