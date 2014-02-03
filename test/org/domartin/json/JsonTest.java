@@ -38,9 +38,16 @@ import org.domartin.json.Address;
 import org.domartin.json.Employee;
 
 import org.domartin.util.JacksonUtility;
+import org.domartin.util.OrderedPair;
+
+import org.apache.log4j.Logger;
 
 public class JsonTest extends TestCase 
 {
+
+    /* Class name*/
+    static Logger log = Logger.getLogger(JsonTest.class);
+    private static String PROJECT_DIR = "java";
 
     /**
     * This test was our first attempt at simply using a toJason method
@@ -222,7 +229,7 @@ public class JsonTest extends TestCase
     {
         //read json file data to String
         File file = new File("/");
-        String to_file = "projects"+File.separator+"domartin"+File.separator+"files"+File.separator;
+        String to_file = PROJECT_DIR+File.separator+"domartin"+File.separator+"files"+File.separator;
         String path = file.getAbsolutePath();
         //System.out.println("path "+path+to_file);
         byte[] jsonData = Files.readAllBytes(Paths.get(path+to_file+"employee.txt"));
@@ -252,7 +259,7 @@ public class JsonTest extends TestCase
     {
         //read json file data to String
         File file = new File("/");
-        String to_file = "projects"+File.separator+"domartin"+File.separator+"files"+File.separator;
+        String to_file = PROJECT_DIR+File.separator+"domartin"+File.separator+"files"+File.separator;
         String path = file.getAbsolutePath();
         //System.out.println("path "+path+to_file);
         byte[] jsonData = Files.readAllBytes(Paths.get(path+to_file+"employee2.txt"));
@@ -283,7 +290,7 @@ public class JsonTest extends TestCase
     public void testJsonMap() throws Exception
     {
         File file = new File("/");
-        String to_file = "projects"+File.separator+"domartin"+File.separator+"files"+File.separator;
+        String to_file = PROJECT_DIR+File.separator+"domartin"+File.separator+"files"+File.separator;
         String path = file.getAbsolutePath();
         //converting json to Map
         byte[] mapData = null;
@@ -325,7 +332,7 @@ public class JsonTest extends TestCase
     public void testTypeReferenceMap() throws Exception
     {
         File file = new File("/");
-        String to_file = "projects"+File.separator+"domartin"+File.separator+"files"+File.separator;
+        String to_file = PROJECT_DIR+File.separator+"domartin"+File.separator+"files"+File.separator;
         String path = file.getAbsolutePath();
         //converting json to Map
         byte[] mapData = null;
@@ -339,7 +346,7 @@ public class JsonTest extends TestCase
         } catch (java.io.IOException e) 
         {
             System.err.println("IOException from testTypeReferenceMap");
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         //System.out.println("Map2 using TypeReference: "+map2);
         assertEquals(true, false);
@@ -349,7 +356,7 @@ public class JsonTest extends TestCase
     {
         //read json file data to String
         File file = new File("/");
-        String to_file = "projects"+File.separator+"domartin"+File.separator+"files"+File.separator;
+        String to_file = PROJECT_DIR+File.separator+"domartin"+File.separator+"files"+File.separator;
         String path = file.getAbsolutePath();
         byte[] jsonData = Files.readAllBytes(Paths.get(path+to_file+"employee.txt"));
         //create ObjectMapper instance
@@ -377,14 +384,14 @@ public class JsonTest extends TestCase
     {
         //read json file data to String
         File file = new File("/");
-        String to_file = "projects"+File.separator+"domartin"+File.separator+"files"+File.separator;
+        String to_file = PROJECT_DIR+File.separator+"domartin"+File.separator+"files"+File.separator;
         String path = file.getAbsolutePath();
         byte[] json_data = Files.readAllBytes(Paths.get(path+to_file+"employee.txt"));
         ObjectMapper objectMapper = new ObjectMapper();
         //create JsonNode
         JsonNode rootNode = objectMapper.readTree(json_data);
         double expected = (Math.random())*500;
-        System.out.println("New id "+expected);
+        log.info("JsonTest.testJsonEdit: New id "+expected);
         //update JSON data
         ((ObjectNode) rootNode).put("id", Double.toString(expected));
         //add new key value
@@ -392,12 +399,22 @@ public class JsonTest extends TestCase
         //remove existing key
         //((ObjectNode) rootNode).remove("role");
         //((ObjectNode) rootNode).remove("properties");
-        String new_file_path = JacksonUtility.getPathToFolder(path+"projects", "domartin", "files", "updated_emp.txt");
+        String new_file_path = JacksonUtility.getPathToFolder(path+PROJECT_DIR, "domartin", "files", "updated_emp.txt");
         objectMapper.writeValue(new File(new_file_path), rootNode);
         // now load the modified file and check the change.
-        String path_to_file = JacksonUtility.getPathToFolder("projects", "domartin", "files");
+        String path_to_file = JacksonUtility.getPathToFolder(PROJECT_DIR, "domartin", "files");
         json_data = JacksonUtility.getJsonData("updated_emp.txt", path_to_file, file.getAbsolutePath());
         String actual = JacksonUtility.findNodeValue(json_data, "id");
+        assertEquals(expected,actual);
+    }
+
+    public void testOrderedPair()
+    {
+        String expected = "value";
+        OrderedPair op = new OrderedPair("key","value");
+        String[] arguments = new String[] {"unused"};
+        op.main(arguments);
+        String actual = (String)op.getValue();
         assertEquals(expected,actual);
     }
 
@@ -433,7 +450,7 @@ public class JsonTest extends TestCase
     private String getStringStatement()
     {
         File file = new File("/");
-        String to_file = "projects"+File.separator+"domartin"+File.separator+"files"+File.separator;
+        String to_file = PROJECT_DIR+File.separator+"domartin"+File.separator+"files"+File.separator;
         String path = file.getAbsolutePath();
         byte[] json_data = null;
         try 

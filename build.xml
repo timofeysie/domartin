@@ -19,12 +19,13 @@
 	<property name="junit.fork" value="true" />
 
 	<path id="compile.classpath">
-    		<pathelement path ="lib/httpcore-4.3.1.jar"/>
+    	<pathelement path ="lib/httpcore-4.3.1.jar"/>
 		<pathelement path ="lib/tincan-1.jar"/>
 		<pathelement path ="lib/tincan-1-jar-with-dependencies.jar"/>
 		<pathelement path ="jackson-databind-2.2.3.jar"/>
 		<pathelement path ="jackson-core-2.2.3.jar"/>
 		<pathelement path ="jackson-annotations-2.2.3.jar"/>
+		<pathelement path ="lib/log4j-1.2.17.jar"/>
 	</path>
 
 	<path id="test.classpath">
@@ -47,9 +48,9 @@
 		<mkdir dir="${build.dir}/classes" />
 		<mkdir dir="${dist.dir}" />
 		<echo message="Building ${ant.project.name}" />
-		<echo message="/////////////////////////////////////////////////////" />
+		<echo message="/////////////////////////////////////////////////" />
 		<echo message="//////////// The Commons of Domartin ////////////" />
-		<echo message="/////////////////////////////////////////////////////" />
+		<echo message="/////////////////////////////////////////////////" />
 		<echo message="" />
 		<echo message="Domartin 0.1 Ingress" />
 		<echo message="" />
