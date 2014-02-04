@@ -1,23 +1,14 @@
 package org.domartin.json;
 
+import org.apache.log4j.Logger;
+import junit.framework.TestCase;
+
 import java.net.URI;
 import java.net.URISyntaxException;
-import junit.framework.TestCase;
-import org.domartin.json.*;
-
-//import com.rusticisoftware.tincan.TestUtils.assertSerializeDeserialize;
-//import com.rusticisoftware.tincan.TestUtils.getAgent;
-import com.rusticisoftware.tincan.*;
-import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.rusticisoftware.tincan.State;
-
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.joda.time.DateTime;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -29,18 +20,25 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
  
+ //import com.rusticisoftware.tincan.TestUtils.assertSerializeDeserialize;
+//import com.rusticisoftware.tincan.TestUtils.getAgent;
+import com.rusticisoftware.tincan.*;
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.rusticisoftware.tincan.State;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+
 import org.domartin.json.Address;
 import org.domartin.json.Employee;
-
 import org.domartin.util.JacksonUtility;
 import org.domartin.util.OrderedPair;
-
-import org.apache.log4j.Logger;
 
 public class JsonTest extends TestCase 
 {
@@ -352,6 +350,9 @@ public class JsonTest extends TestCase
         assertEquals(true, false);
     }
 
+    /**
+    * Load the id of employee.txt and get the id, which should be 123.
+    */
     public void testJDOMStyleJsonParse() throws Exception
     {
         //read json file data to String
@@ -379,6 +380,8 @@ public class JsonTest extends TestCase
 
     /**
     * A test of editing a json document.
+    * We change the id in employee.txt to a random number and save it in the 
+    * updated_emp.txt.  Then we load that and check the id for equality.
     */
     public void testJsonEdit() throws Exception
     {
@@ -408,14 +411,123 @@ public class JsonTest extends TestCase
         assertEquals(expected,actual);
     }
 
-    public void testOrderedPair()
+    /**
+    * Test the JsonParser in the Jackson core package.
+    */
+    public void testStreamingJackson()
     {
-        String expected = "value";
-        OrderedPair op = new OrderedPair("key","value");
-        String[] arguments = new String[] {"unused"};
-        op.main(arguments);
-        String actual = (String)op.getValue();
+        File file = new File("/");
+        String root_path = file.getAbsolutePath();
+        String path_to_file = JacksonUtility.getPathToFolder(root_path, PROJECT_DIR, "domartin", 
+            "files", "employee.txt");
+        File if_file = new File(path_to_file);
+        if (!if_file.exists())
+        {
+            log.debug("file "+path_to_file+" doesn't exist");
+        } else
+        {
+            log.debug("loading "+path_to_file);
+        }
+        Employee emp = new Employee();
+        try
+        {
+            JsonParser jsonParser = new JsonFactory().createParser(new File(path_to_file));
+            //loop through the tokens
+            Address address = new Address();
+            emp.setAddress(address);
+            emp.setCities(new ArrayList<String>());
+            emp.setProperties(new HashMap<String, String>());
+            List<Long> phoneNums = new ArrayList<Long>();
+            boolean insidePropertiesObj=false;
+            parseJSON(jsonParser, emp, phoneNums, insidePropertiesObj);
+            long[] nums = new long[phoneNums.size()];
+            int index = 0;
+            for(Long l :phoneNums)
+            {
+                nums[index++] = l;
+            }
+            emp.setPhoneNumbers(nums);
+            jsonParser.close();
+        } catch (java.io.IOException ioe)
+        {
+            log.error("testStreamingJackson: ioe");
+            ioe.printStackTrace();
+        }
+        //print employee object
+        log.info("Employee Object\n\n"+emp);
+        String expected = "Pankaj";
+        String actual = emp.getName();
         assertEquals(expected,actual);
+    }
+
+    private static void parseJSON(JsonParser jsonParser, Employee emp,
+            List<Long> phoneNums, boolean insidePropertiesObj) 
+            throws JsonParseException, IOException 
+    {
+         
+        //loop through the JsonTokens
+        while(jsonParser.nextToken() != JsonToken.END_OBJECT)
+        {
+            String name = jsonParser.getCurrentName();
+            if("id".equals(name))
+            {
+                jsonParser.nextToken();
+                emp.setId(jsonParser.getIntValue());
+            } else if("name".equals(name))
+            {
+                jsonParser.nextToken();
+                emp.setName(jsonParser.getText());
+            } else if("permanent".equals(name))
+            {
+                jsonParser.nextToken();
+                emp.setPermanent(jsonParser.getBooleanValue());
+            } else if("address".equals(name))
+            {
+                jsonParser.nextToken();
+                //nested object, recursive call
+                parseJSON(jsonParser, emp, phoneNums, insidePropertiesObj);
+            } else if("street".equals(name))
+            {
+                jsonParser.nextToken();
+                emp.getAddress().setStreet(jsonParser.getText());
+            } else if("city".equals(name))
+            {
+                jsonParser.nextToken();
+                emp.getAddress().setCity(jsonParser.getText());
+            } else if("zipcode".equals(name))
+            {
+                jsonParser.nextToken();
+                emp.getAddress().setZipcode(jsonParser.getIntValue());
+            } else if("phoneNumbers".equals(name))
+            {
+                jsonParser.nextToken();
+                while (jsonParser.nextToken() != JsonToken.END_ARRAY) 
+                {
+                    phoneNums.add(jsonParser.getLongValue());
+                }
+            } else if("role".equals(name))
+            {
+                jsonParser.nextToken();
+                emp.setRole(jsonParser.getText());
+            } else if("cities".equals(name))
+            {
+                jsonParser.nextToken();
+                while (jsonParser.nextToken() != JsonToken.END_ARRAY) 
+                {
+                    emp.getCities().add(jsonParser.getText());
+                }
+            } else if("properties".equals(name))
+            {
+                jsonParser.nextToken();
+                while(jsonParser.nextToken() != JsonToken.END_OBJECT)
+                {
+                    String key = jsonParser.getCurrentName();
+                    jsonParser.nextToken();
+                    String value = jsonParser.getText();
+                    emp.getProperties().put(key, value);
+                }
+            }
+        }
     }
 
     public static Employee createEmployee() 
