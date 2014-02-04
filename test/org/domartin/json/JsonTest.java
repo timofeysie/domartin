@@ -45,7 +45,7 @@ public class JsonTest extends TestCase
 
     /* Class name*/
     static Logger log = Logger.getLogger(JsonTest.class);
-    private static String PROJECT_DIR = "java";
+    private static String PROJECT_DIR = "projects";
 
     /**
     * This test was our first attempt at simply using a toJason method
@@ -454,7 +454,7 @@ public class JsonTest extends TestCase
             ioe.printStackTrace();
         }
         //print employee object
-        log.info("Employee Object\n\n"+emp);
+        //log.info("Employee Object\n\n"+emp);
         String expected = "Pankaj";
         String actual = emp.getName();
         assertEquals(expected,actual);
