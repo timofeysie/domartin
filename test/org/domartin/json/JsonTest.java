@@ -40,12 +40,17 @@ import org.domartin.json.Employee;
 import org.domartin.util.JacksonUtility;
 import org.domartin.util.OrderedPair;
 
+/**
+* Some of these tests depend on the files in the 'project'/domartin/files folder.
+* Therefore, you must change the PROJECT_DIR class variable to reflect the location 
+* of the domartin folder.
+*/
 public class JsonTest extends TestCase 
 {
 
     /* Class name*/
     static Logger log = Logger.getLogger(JsonTest.class);
-    private static String PROJECT_DIR = "projects";
+    private static String PROJECT_DIR = "java";
 
     /**
     * This test was our first attempt at simply using a toJason method
