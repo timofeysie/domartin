@@ -9,6 +9,13 @@ import com.rusticisoftware.tincan.v10x.StatementsQuery;
 import com.rusticisoftware.tincan.*;
 import java.util.UUID;
 
+// for the vocabulary object test
+import java.net.URI;
+import com.rusticisoftware.tincan.Context;
+import com.rusticisoftware.tincan.Activity;
+import com.rusticisoftware.tincan.Extensions;
+import com.rusticisoftware.tincan.LanguageMap;
+import com.rusticisoftware.tincan.ActivityDefinition;
 
 public class TinCanJavaTest extends TestCase 
 {
@@ -123,6 +130,50 @@ public class TinCanJavaTest extends TestCase
 		assertEquals(expected,actual);
 	}
 
+	/**
+	*{
+	*    "actor": 
+	*    {
+	*            "objectType": "Agent", 
+	*            "mbox":"mailto:timofeyc@example.com" 
+	*        },
+	*        "verb" : 
+	*    { 
+	*            "id":"http://adlnet.gov/expapi/verbs/answered", 
+	*            "display":{"en-US":"answered",
+	*			 "result.success = true"}
+	*        },
+	*    "object": 
+	*    {
+	*            "id": "http://en.wiktionary.org/wiki/cat",
+	*            "definition": 
+	*        {
+	*                "description": {"en-US": "cat" },
+	*                "object": 
+	*            {
+	*                    "objectType": "SubStatement",
+	*                    "object": 
+	*                {
+	*                            "id":"http://ko.wiktionary.org/wiki/goyanig",
+	*                            "definition": 
+	*                            {
+	*                                "name" : {"ko-KR": "goyanig"}
+	*                    }
+	*                    }
+	*                }
+	*            }        
+	*    },
+	*    "context": 
+	*    {
+	*        "language" : "ko-KR",
+	*        "platform" : "android",
+	*        "extensions": 
+	*        {
+	*                "http://www.curchod.com/testing_type": {"type": "READING"}
+	*                }
+	*    }
+	*}
+*/
 	public void testCreateVocabularyStatement() 
 	{
 		String method = "testCreateVocabularyStatement";
@@ -143,10 +194,26 @@ public class TinCanJavaTest extends TestCase
 		agent.setMbox("mailto:info@tincanapi.com");
 		Verb verb = null;
 		Activity activity = null;
+		ActivityDefinition activity_definition = null;
+		Context context = null;
+		Extensions extension = null;
 		try
 		{
-			verb = new Verb("http://adlnet.gov/expapi/verbs/attempted");
+			verb = new Verb("http://adlnet.gov/expapi/verbs/answered");
 			activity = new Activity("http://rusticisoftware.github.com/TinCanJava");
+			activity.setId("http://en.wiktionary.org/wiki/cat");
+			LanguageMap description = new LanguageMap();
+			description.put("en-US", "cat" );
+			activity_definition = new ActivityDefinition();
+			activity_definition.setDescription(description);
+			activity.setDefinition(activity_definition);
+			context = new Context();
+			context.setLanguage("ko-KR");
+			context.setPlatform("android");
+			extension = new Extensions();
+			extension.put(new URI("http://www.curchod.com/testing_type"));
+			extension.put("type", "READING"); 
+			context.setExtension(extension);
 		} catch (java.net.URISyntaxException use)
 		{
 			log.error(method+": URISyntaxException");
@@ -155,7 +222,8 @@ public class TinCanJavaTest extends TestCase
 		st.setActor(agent);
 		st.setVerb(verb);
 		st.setObject(activity);
-		
+		st.setExtension(extension);
+		log.info(method+" statement: "+st.toString());
 		assertEquals(true,false);
 	}
 
