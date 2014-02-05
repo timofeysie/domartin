@@ -16,6 +16,8 @@ import com.rusticisoftware.tincan.Activity;
 import com.rusticisoftware.tincan.Extensions;
 import com.rusticisoftware.tincan.LanguageMap;
 import com.rusticisoftware.tincan.ActivityDefinition;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+// import com.rusticisoftware.tincan.json.StringOfJSON;
 
 public class TinCanJavaTest extends TestCase 
 {
@@ -211,9 +213,12 @@ public class TinCanJavaTest extends TestCase
 			context.setLanguage("ko-KR");
 			context.setPlatform("android");
 			extension = new Extensions();
-			extension.put(new URI("http://www.curchod.com/testing_type"));
-			extension.put("type", "READING"); 
-			context.setExtension(extension);
+			// the following causes this exception:
+			// No serializer found for class com.rusticisoftware.tincan.json.StringOfJSON and no properties discovered to create BeanSerializer (to avoid exception, disable SerializationConfig.SerializationFeature.FAIL_ON_EMPTY_BEANS) )
+			//StringOfJSON ext_string = new StringOfJSON("{\"type\": \"READING\"}"); 
+			String ext_string = "{type:READING}"; 
+			extension.put(new URI("http://www.curchod.com/testing_type"), ext_string);
+			activity_definition.setExtensions(extension);
 		} catch (java.net.URISyntaxException use)
 		{
 			log.error(method+": URISyntaxException");
@@ -222,8 +227,8 @@ public class TinCanJavaTest extends TestCase
 		st.setActor(agent);
 		st.setVerb(verb);
 		st.setObject(activity);
-		st.setExtension(extension);
-		log.info(method+" statement: "+st.toString());
+		ObjectNode object = st.toJSONNode(TCAPIVersion.V100);
+		log.info(method+" statement: "+object.toString());
 		assertEquals(true,false);
 	}
 
