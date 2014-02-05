@@ -44,4 +44,13 @@ public class TinCanJavaTest extends TestCase
 		assertEquals(true,false);
 	}
 
+	public void testGetLastQuery() 
+	{
+		StatementsQuery query = new StatementsQuery();
+		query.setSince(new DateTime("2013-09-30T13:15:00.000Z"));
+		StatementsResult result = obj.queryStatements(query);
+		log.info("Statement Result "+result.toString());
+		assertEquals(true,false);
+	}
+
 }
