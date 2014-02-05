@@ -72,7 +72,7 @@ Anyhow, we would have this type of code to use the utility to find one node valu
         String expected = JacksonUtility.findNodeValue(json_data, "id");
 
 Looks terrible really.  And when are we going to be looking for one value?  Json will just be a transport mechinism, like xml, and the real work will be in the db.  We should think about a real world example of how we will use json before we put work like this into creating utility methods.
-Since we are using xml to send words and tests to the Android client.
+Since we are using xml to send words and tests to the Android client.  When we use a test result, we actually have a lot more information we track to report back to the front end to show the client, like the updated word level, and statistics on it, as well as holding on to the ability to roll back the changes.  Having a basic json with the information provided by Tin Can doesn't quitre cover what we need unless we amp up extra data attached.
 
 
 
