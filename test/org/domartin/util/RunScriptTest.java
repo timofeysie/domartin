@@ -32,6 +32,8 @@ public class RunScriptTest extends TestCase
         String root_path = file.getAbsolutePath();
         String path_to_xapi = readFile(JacksonUtility.getPathToFolder(root_path, PROJECT_DIR, 
         	"domartin", "files", "xAPI-Validator-JS", "xapiValidator.js"));
+        String path_to_package = readFile(JacksonUtility.getPathToFolder(root_path, PROJECT_DIR, 
+        	"domartin", "files", "xAPI-Validator-JS", "package.json"));
         String path_to_spec = readFile(JacksonUtility.getPathToFolder(root_path, PROJECT_DIR, 
         	"domartin", "files", "xAPI-Validator-JS", "spec", "xapiValidator_spec.js"));
         String path_to_chai = readFile(JacksonUtility.getPathToFolder(root_path, PROJECT_DIR, 
@@ -40,7 +42,8 @@ public class RunScriptTest extends TestCase
         	"domartin", "files", "xAPI-Validator-JS",  "spec", "lib", "mocha.js"));
         String path_to_underscore = readFile(JacksonUtility.getPathToFolder(root_path, PROJECT_DIR, 
         	"domartin", "files", "xAPI-Validator-JS",  "spec", "lib", "underscore.js"));
-		String [] args = {path_to_xapi, path_to_spec, path_to_chai, path_to_mocha, path_to_underscore};
+		String [] args = {path_to_xapi, path_to_spec, path_to_chai, path_to_mocha, 
+			path_to_underscore, path_to_package};
 		String actual = RunScript.execute(args);
 		log.info(method+" result "+actual);
 		String expected = "Test";
