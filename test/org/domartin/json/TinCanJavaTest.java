@@ -15,6 +15,7 @@ import com.rusticisoftware.tincan.Context;
 import com.rusticisoftware.tincan.Activity;
 import com.rusticisoftware.tincan.Extensions;
 import com.rusticisoftware.tincan.LanguageMap;
+import com.rusticisoftware.tincan.SubStatement;
 import com.rusticisoftware.tincan.ActivityDefinition;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 // import com.rusticisoftware.tincan.json.StringOfJSON;
@@ -133,6 +134,8 @@ public class TinCanJavaTest extends TestCase
 	}
 
 	/**
+	* This test tried to create a vocabulary learning test of the word cat.
+	* The Korea answer is abscent.
 	*{
 	*    "actor": 
 	*    {
@@ -148,22 +151,7 @@ public class TinCanJavaTest extends TestCase
 	*    "object": 
 	*    {
 	*            "id": "http://en.wiktionary.org/wiki/cat",
-	*            "definition": 
-	*        {
-	*                "description": {"en-US": "cat" },
-	*                "object": 
-	*            {
-	*                    "objectType": "SubStatement",
-	*                    "object": 
-	*                {
-	*                            "id":"http://ko.wiktionary.org/wiki/goyanig",
-	*                            "definition": 
-	*                            {
-	*                                "name" : {"ko-KR": "goyanig"}
-	*                    }
-	*                    }
-	*                }
-	*            }        
+	*            "definition": {"description": {"en-US": "cat" },       
 	*    },
 	*    "context": 
 	*    {
@@ -172,7 +160,7 @@ public class TinCanJavaTest extends TestCase
 	*        "extensions": 
 	*        {
 	*                "http://www.curchod.com/testing_type": {"type": "READING"}
-	*                }
+	*         }
 	*    }
 	*}
 */
@@ -230,6 +218,150 @@ public class TinCanJavaTest extends TestCase
 		ObjectNode object = st.toJSONNode(TCAPIVersion.V100);
 		log.info(method+" statement: "+object.toString());
 		assertEquals(true,false);
+	}
+
+	/**
+	* In this test we create a statement with an attached SubStatement.
+	*{
+	*    "actor": 
+	*    {
+	*            "objectType": "Agent", 
+	*            "mbox":"mailto:timofeyc@example.com" 
+	*        },
+	*     "verb" : 
+	*    { 
+	*            "id":"http://adlnet.gov/expapi/verbs/answered", 
+	*            "display":{"en-US":"answered",
+	*			 "result.success = true"}
+	*        },
+	*    "object": 
+	*    {
+	*            "id": "http://en.wiktionary.org/wiki/cat",
+	*            "definition": 
+	*        {
+	*                "description": {"en-US": "cat" },
+	*                "object": 
+	*            {
+	*                    "objectType": "SubStatement",
+	*                    "object": 
+	*                {
+	*                            "id":"http://ko.wiktionary.org/wiki/goyangi",
+	*                            "definition": 
+	*                            {
+	*                                "name" : {"ko-KR": "goyangi"}
+	*                    }
+	*                    }
+	*                }
+	*            }        
+	*    },
+	*    "context": 
+	*    {
+	*        "language" : "ko-KR",
+	*        "platform" : "android",
+	*        "extensions": 
+	*        {
+	*                "http://www.curchod.com/testing_type": {"type": "READING"}
+	*                }
+	*    }
+	*}
+*/
+	public void testStatementWithSubStatement() 
+	{
+		String method = "testStatementWithSubStatement";
+		RemoteLRS lrs = new RemoteLRS();
+		try
+		{
+			lrs.setEndpoint(endpoint2);
+		} catch (java.net.MalformedURLException mue)
+		{
+			log.error(method+": MalformedURLException");
+		}
+		lrs.setVersion(TCAPIVersion.V100);
+		lrs.setUsername("Test");
+		lrs.setPassword("https://cloud.scorm.com/tc/public/");
+		Agent agent = new Agent();
+		agent.setMbox("mailto:info@tincanapi.com");
+		Verb verb = null;
+		Activity activity = null;
+		ActivityDefinition activity_definition = null;
+		Context context = null;
+		Extensions extension = null;
+		try
+		{
+			verb = new Verb("http://adlnet.gov/expapi/verbs/answered");
+			activity = new Activity("http://rusticisoftware.github.com/TinCanJava");
+			activity.setId("http://en.wiktionary.org/wiki/cat");
+			LanguageMap description = new LanguageMap();
+			description.put("en-US", "cat" );
+			activity_definition = new ActivityDefinition();
+			activity_definition.setDescription(description);
+			activity.setDefinition(activity_definition);
+			context = new Context();
+			context.setLanguage("ko-KR");
+			context.setPlatform("android");
+			extension = new Extensions();
+			// the following causes this exception:
+			// No serializer found for class com.rusticisoftware.tincan.json.StringOfJSON and no properties discovered to create BeanSerializer (to avoid exception, disable SerializationConfig.SerializationFeature.FAIL_ON_EMPTY_BEANS) )
+			//StringOfJSON ext_string = new StringOfJSON("{\"type\": \"READING\"}"); 
+			String ext_string = "{type:READING}"; 
+			extension.put(new URI("http://www.curchod.com/testing_type"), ext_string);
+			activity_definition.setExtensions(extension);
+		} catch (java.net.URISyntaxException use)
+		{
+			log.error(method+": URISyntaxException");
+		}
+		Statement statement = new Statement();
+		statement.setActor(agent);
+		statement.setVerb(verb);
+		statement.setObject(activity);
+		SubStatement sub_statement = createSubStatement();
+		statement.setObject(sub_statement);
+		ObjectNode object = statement.toJSONNode(TCAPIVersion.V100);
+		log.info(method+" statement: "+object.toString());
+		assertEquals(true,false);
+	}
+
+	/**
+	* A SubStatement can only setActor, setAttachments, setContext, 
+	* setObject, setResult,  or setVerb.
+	* The setObject sets an Activity, so the object in the substatement
+	* is representedd by an Activity.
+	*            {
+	*                    "objectType": "SubStatement",
+	*                    "object": 
+	*                	 {
+	*                            "id":"http://ko.wiktionary.org/wiki/goyanig",
+	*                            "definition": 
+	*                            {
+	*                                "name" : {"ko-KR": "goyanig"}
+	*                    		 }
+	*                    }
+	*            }
+	*/
+	private SubStatement createSubStatement()
+	{
+		String method = "createSubStatement";
+		SubStatement sub_statement = new SubStatement();
+		Statement statement = new Statement();
+		Activity activity = new Activity();
+		try
+		{
+			activity.setId("http://en.wiktionary.org/wiki/cat");
+		} catch (java.net.URISyntaxException use)
+		{
+			log.error(method+": URISyntaxException");
+		}
+		LanguageMap description = new LanguageMap();
+		description.put("ko-KR", "goyangi" );
+		ActivityDefinition activity_definition = new ActivityDefinition();
+		activity_definition.setDescription(description);
+		activity.setDefinition(activity_definition);
+		Context context = new Context();
+		context.setLanguage("ko-KR");
+		context.setPlatform("android");
+		sub_statement.setContext(context);
+		sub_statement.setObject(activity);
+		return sub_statement;
 	}
 
 	private DateTime getPrevoisTime()
