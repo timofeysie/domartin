@@ -50,7 +50,8 @@ public class JsonTest extends TestCase
 
     /* Class name*/
     static Logger log = Logger.getLogger(JsonTest.class);
-    private static String PROJECT_DIR = "projects";
+    //private static String PROJECT_DIR = "projects";
+    private static String PROJECT_DIR = "java";
 
     /**
     * This test was our first attempt at simply using a toJason method

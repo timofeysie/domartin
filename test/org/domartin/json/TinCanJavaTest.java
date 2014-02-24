@@ -28,6 +28,7 @@ public class TinCanJavaTest extends TestCase
 
     public void testStatementSend() 
 	{
+    	org.apache.log4j.BasicConfigurator.configure();
 		String method = "testStatementSend";
 		String endpoint1 = "https://cloud.scorm.com/tc/public/";
 		String endpoint2 = "https://cloud.scorm.com/ScormEngineInterface/TCAPI/public/";
@@ -268,6 +269,7 @@ public class TinCanJavaTest extends TestCase
 	public void testStatementWithSubStatement() 
 	{
 		String method = "testStatementWithSubStatement";
+		String endpoint2 = "https://cloud.scorm.com/ScormEngineInterface/TCAPI/public/";
 		RemoteLRS lrs = new RemoteLRS();
 		try
 		{
@@ -315,7 +317,10 @@ public class TinCanJavaTest extends TestCase
 		statement.setVerb(verb);
 		statement.setObject(activity);
 		SubStatement sub_statement = createSubStatement();
-		statement.setObject(sub_statement);
+		// statement.setObject(sub_statement); this erases the other object
+		context.setStatement(sub_statement);
+		statement.setContext(context);
+		log.info(method+" toString "+statement.toString());
 		ObjectNode object = statement.toJSONNode(TCAPIVersion.V100);
 		log.info(method+" statement: "+object.toString());
 		assertEquals(true,false);
