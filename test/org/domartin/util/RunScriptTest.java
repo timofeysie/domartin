@@ -1,6 +1,7 @@
 package org.domartin.util;
 
 import org.apache.log4j.Logger;
+
 import junit.framework.TestCase;
 
 import java.io.File;
@@ -11,7 +12,8 @@ public class RunScriptTest extends TestCase
 
     /* Class name*/
     static Logger log = Logger.getLogger(RunScriptTest.class);
-    private static String PROJECT_DIR = "projects";
+    //private static String PROJECT_DIR = "projects";
+    private static String PROJECT_DIR = "java";
 
 
     public void testRunSimpleScript() 
