@@ -268,6 +268,7 @@ public class TinCanJavaTest extends TestCase
 	public void testStatementWithSubStatement() 
 	{
 		String method = "testStatementWithSubStatement";
+		String endpoint2 = "https://cloud.scorm.com/ScormEngineInterface/TCAPI/public/";
 		RemoteLRS lrs = new RemoteLRS();
 		try
 		{
